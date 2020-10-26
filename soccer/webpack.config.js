@@ -22,7 +22,12 @@ module.exports = {
       },
       {
         test: /\.(png|jpeg|jpg)$/,
-        loader: 'url-loader',
+        use: {
+          options: {
+            name: '[name].[ext]',
+          },
+          loader: 'file-loader',
+        },
       },
       {
         test: /\.svg$/,
@@ -49,6 +54,8 @@ module.exports = {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
     port: 9000,
+    hot: true,
+    publicPath: '/',
   },
   plugins: [
     new HtmlWebpackPlugin({
