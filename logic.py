@@ -17,3 +17,19 @@ def CalcularCentroide(puntos):
         denominador += i[1]
 
     return numerador/denominador
+
+
+def muyLejos(x): return 1/(1 + math.exp(-2.7*(x - 7.3)))
+
+
+def cerca(x): return 1/(1 + math.exp(7.3*(x - 2.7)))
+
+
+def lejos(x): return max(
+    min(
+        (x-8)/(5-8),
+        1,
+        (2-x)/(2-5)
+    ),
+    0
+)
