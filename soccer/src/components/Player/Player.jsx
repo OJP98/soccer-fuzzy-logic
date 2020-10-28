@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 
 const playerImg = require('../../assets/player.png').default
 
-const HEIGHT = 120
-const WIDTH = 120
+const HEIGHT = 20
+const WIDTH = 20
 
 class Player extends Component {
   constructor(props) {
@@ -12,14 +12,20 @@ class Player extends Component {
     this.state = {
       x: props.x,
       y: props.y,
-      angle: 0,
       imgFile: `url(${playerImg})`,
-      hasBall: false,
-      isShooting: false,
     }
   }
 
-  update() {
+  getCoords() {
+    this.setState(
+      (prevState) => ({
+        x: parseInt(prevState.x, 10) + 10,
+        y: parseInt(prevState.y, 10) + 10,
+      }),
+    )
+  }
+
+  /* update() {
     const { onUpdate } = this.props
 
     if (onUpdate && typeof onUpdate === 'function') {
@@ -29,14 +35,14 @@ class Player extends Component {
         this.setState((prevState) => ({ ...prevState, ...onUpdateResult }))
       }
     }
-  }
+  } */
 
   render() {
     const { state } = this
     const style = {
       position: 'absolute',
-      top: state.x,
-      left: state.y,
+      top: `${state.y}px`,
+      left: `${state.x}px`,
       backgroundImage: state.imgFile,
       backgroundSize: 'cover',
       width: WIDTH,
@@ -44,8 +50,7 @@ class Player extends Component {
     }
 
     return (
-      <div style={style} />
-
+      <div style={style} onClick={() => this.getCoords()} aria-hidden="true" />
     )
   }
 }

@@ -1,6 +1,7 @@
 body {
   font-family: 'roboto', 'Courier New', Courier, monospace;
 }
+
 .title {
 	display: flex;
 	justify-content: center;
