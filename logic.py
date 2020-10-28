@@ -1,7 +1,9 @@
 #* pelotaX, pelotaY, jugadorX, jugadorY, jugadorAngulo, porteriaX, porteriaY
+import numpy as np
+import plotly.graph_objects as go
 import math
 
-# pelota, jugador
+MAX_DISTANCIA = 256
 
 
 def DistanciaPelotaJugador(jugadorX, jugadorY, pelotaX, pelotaY):
@@ -33,3 +35,34 @@ def lejos(x): return max(
     ),
     0
 )
+
+
+def getDistanciaDeEntrada(distancia):
+    return int((distancia*10)/MAX_DISTANCIA)
+
+
+def getDistanciaSalida():
+    x = []
+    yCerca = []
+    yLejos = []
+    yMuyLejos = []
+
+    distanciaEntrada = getDistanciaDeEntrada(250)
+    print(f"Variable de entrada: {distanciaEntrada}")
+    for i in range(10):
+        x.append(i)
+        yCerca.append(min(cerca(i), cerca(distanciaEntrada)))
+        yLejos.append(min(lejos(i), lejos(distanciaEntrada)))
+        yMuyLejos.append(min(muyLejos(i), muyLejos(distanciaEntrada)))
+
+    puntos = []
+    for i in range(10):
+        puntos.append([i, max(yCerca[i], yLejos[i], yMuyLejos[i])])
+
+    print(f"Centroide: {CalcularCentroide(puntos)}")
+    print(f"Avanzar: {(int(CalcularCentroide(puntos))*MAX_DISTANCIA)/10}")
+
+
+getDistanciaSalida()
+#fig = go.Figure(data=go.Scatter(x=x, y=yMuyLejos))
+# fig.write_html("./file.html")
