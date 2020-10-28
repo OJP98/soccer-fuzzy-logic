@@ -8,7 +8,25 @@ import './style.css'
 export default class App extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      python: ''
+    }
+
+    this.testPython = this.testPython.bind(this)
+  }
+
+  testPython() {
+    fetch('http://localhost:3000/', {
+      'method': 'GET'
+    })
+      .then((res) => res.json())
+      .then(res => {
+        console.log(res)
+        this.setState({
+          python: res.join(','),
+        })
+      })
+
   }
 
   render() {
@@ -18,7 +36,8 @@ export default class App extends React.Component {
         <Field>
           <Player x="200" y="100" />
         </Field>
-        <Button color="primary">This is a MUI button</Button>
+        <Button color="primary" onClick={this.testPython}>Consultar</Button>
+        <p>{this.state.python}</p>
       </div>
     )
   }
