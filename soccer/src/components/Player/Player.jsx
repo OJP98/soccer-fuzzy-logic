@@ -16,7 +16,16 @@ class Player extends Component {
     }
   }
 
+  // eslint-disable-next-line react/no-deprecated
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      x: nextProps.x,
+      y: nextProps.y,
+    })
+  }
+
   getCoords() {
+    console.log(this.state)
     this.setState(
       (prevState) => ({
         x: parseInt(prevState.x, 10) + 10,
@@ -24,18 +33,6 @@ class Player extends Component {
       }),
     )
   }
-
-  /* update() {
-    const { onUpdate } = this.props
-
-    if (onUpdate && typeof onUpdate === 'function') {
-      const onUpdateResult = onUpdate(this.state)
-
-      if (onUpdateResult) {
-        this.setState((prevState) => ({ ...prevState, ...onUpdateResult }))
-      }
-    }
-  } */
 
   render() {
     const { state } = this

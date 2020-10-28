@@ -27,5 +27,6 @@ module.exports = {
       'windows',
     ],
     'react/prop-types': 0,
+    'no-console': 'off',
   },
 }

@@ -1,5 +1,7 @@
+/* eslint-disable import/extensions */
 /* eslint-disable react/no-unused-state */
 import React, { Component } from 'react'
+import Player from '../Player/Player.jsx'
 
 const HEIGHT = 603
 const WIDTH = 1072
@@ -17,12 +19,18 @@ class Field extends Component {
   componentDidMount() {
     const coords = document.getElementById('field').getBoundingClientRect()
     this.setState({
-      x: coords.top,
-      y: coords.left,
+      x: coords.x,
+      y: coords.y,
     })
   }
 
+  componentDidUpdate() {
+    console.log(this.state)
+  }
+
   render() {
+    const { x, y } = this.state
+
     const style = {
       position: 'inherit',
       backgroundImage: `url(${fieldImg})`,
@@ -32,11 +40,9 @@ class Field extends Component {
       height: HEIGHT,
     }
 
-    const { props } = this
-
     return (
       <div id="field" style={style}>
-        {props.children}
+        <Player x={x} y={y} />
       </div>
     )
   }
