@@ -4,6 +4,7 @@ import plotly.graph_objects as go
 import math
 
 MAX_DISTANCIA = 256
+MAX_ANGULO = 365
 
 
 def DistanciaPelotaJugador(jugadorX, jugadorY, pelotaX, pelotaY):
@@ -21,13 +22,13 @@ def CalcularCentroide(puntos):
     return numerador/denominador
 
 
-def muyLejos(x): return 1/(1 + math.exp(-2.7*(x - 7.3)))
+def mucho(x): return 1/(1 + math.exp(-2.7*(x - 7.3)))
 
 
-def cerca(x): return 1/(1 + math.exp(7.3*(x - 2.7)))
+def poco(x): return 1/(1 + math.exp(7.3*(x - 2.7)))
 
 
-def lejos(x): return max(
+def medio(x): return max(
     min(
         (x-8)/(5-8),
         1,
@@ -41,6 +42,10 @@ def getDistanciaDeEntrada(distancia):
     return int((distancia*10)/MAX_DISTANCIA)
 
 
+def getAnguloDeEntrada(angulo):
+    return int((angulo*10)/MAX_ANGULO)
+
+
 def getDistanciaSalida():
     x = []
     yCerca = []
@@ -51,9 +56,9 @@ def getDistanciaSalida():
     print(f"Variable de entrada: {distanciaEntrada}")
     for i in range(10):
         x.append(i)
-        yCerca.append(min(cerca(i), cerca(distanciaEntrada)))
-        yLejos.append(min(lejos(i), lejos(distanciaEntrada)))
-        yMuyLejos.append(min(muyLejos(i), muyLejos(distanciaEntrada)))
+        yCerca.append(min(poco(i), poco(distanciaEntrada)))
+        yLejos.append(min(medio(i), medio(distanciaEntrada)))
+        yMuyLejos.append(min(mucho(i), mucho(distanciaEntrada)))
 
     puntos = []
     for i in range(10):
@@ -63,6 +68,34 @@ def getDistanciaSalida():
     print(f"Avanzar: {(int(CalcularCentroide(puntos))*MAX_DISTANCIA)/10}")
 
 
+def getAngulo(targetX, targetY, myX, myY):
+    radianes = math.atan2(targetY-myY, targetX-myX)
+    return math.degrees(radianes)
+
+
+def getAnguloSalida():
+    x = []
+    yPoco = []
+    yMedio = []
+    yMucho = []
+
+    anguloDeEntrada = getAnguloDeEntrada(getAngulo(1, 1, 1, 0))
+    print(f"Variable de entrada: {anguloDeEntrada}")
+    for i in range(10):
+        x.append(i)
+        yPoco.append(min(poco(i), poco(anguloDeEntrada)))
+        yMedio.append(min(medio(i), medio(anguloDeEntrada)))
+        yMucho.append(min(mucho(i), mucho(anguloDeEntrada)))
+
+    puntos = []
+    for i in range(10):
+        puntos.append([i, max(yPoco[i], yMedio[i], yMucho[i])])
+
+    print(f"Centroide: {CalcularCentroide(puntos)}")
+    print(f"Girar: {(int(CalcularCentroide(puntos))* MAX_ANGULO)/10}")
+
+
 getDistanciaSalida()
+getAnguloSalida()
 #fig = go.Figure(data=go.Scatter(x=x, y=yMuyLejos))
 # fig.write_html("./file.html")
