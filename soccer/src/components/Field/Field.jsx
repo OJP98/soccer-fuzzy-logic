@@ -2,6 +2,7 @@
 /* eslint-disable react/no-unused-state */
 import React, { Component } from 'react'
 import Player from '../Player/Player.jsx'
+import Goal from '../Goal/Goal.jsx'
 
 const HEIGHT = 603
 const WIDTH = 1072
@@ -32,6 +33,7 @@ class Field extends Component {
     const { x, y } = this.state
 
     const style = {
+      display: 'flex',
       position: 'inherit',
       backgroundImage: `url(${fieldImg})`,
       backgroundSize: 'cover',
@@ -43,6 +45,7 @@ class Field extends Component {
     return (
       <div id="field" style={style}>
         <Player x={x} y={y} />
+        <Goal x={x} y={y} />
       </div>
     )
   }
