@@ -1,10 +1,10 @@
 #* pelotaX, pelotaY, jugadorX, jugadorY, jugadorAngulo, porteriaX, porteriaY
-import numpy as np
-import plotly.graph_objects as go
+from numpy import random
 import math
 
 MAX_DISTANCIA = 256
 MAX_ANGULO = 365
+MAX_ANGULO_PATADA = 15
 
 
 def DistanciaPelotaJugador(jugadorX, jugadorY, pelotaX, pelotaY):
@@ -95,7 +95,13 @@ def getAnguloSalida():
     print(f"Girar: {(int(CalcularCentroide(puntos))* MAX_ANGULO)/10}")
 
 
+def getAnguloPatada():
+    randomNormal = random.normal()
+    return (randomNormal*MAX_ANGULO_PATADA)/5
+
+
 getDistanciaSalida()
 getAnguloSalida()
+print(getAnguloPatada())
 #fig = go.Figure(data=go.Scatter(x=x, y=yMuyLejos))
 # fig.write_html("./file.html")
