@@ -1,10 +1,12 @@
 #* pelotaX, pelotaY, jugadorX, jugadorY, jugadorAngulo, porteriaX, porteriaY
-import numpy as np
-import plotly.graph_objects as go
+from numpy import random
 import math
+import sys
 
 MAX_DISTANCIA = 256
 MAX_ANGULO = 365
+MAX_ANGULO_PATADA = 15
+RANGO_PATADA = 10
 
 
 def DistanciaPelotaJugador(jugadorX, jugadorY, pelotaX, pelotaY):
@@ -46,14 +48,14 @@ def getAnguloDeEntrada(angulo):
     return int((angulo*10)/MAX_ANGULO)
 
 
-def getDistanciaSalida():
+def getDistanciaSalida(distancia):
     x = []
     yCerca = []
     yLejos = []
     yMuyLejos = []
 
-    distanciaEntrada = getDistanciaDeEntrada(250)
-    print(f"Variable de entrada: {distanciaEntrada}")
+    distanciaEntrada = getDistanciaDeEntrada(distancia)
+    #print(f"Variable de entrada: {distanciaEntrada}")
     for i in range(10):
         x.append(i)
         yCerca.append(min(poco(i), poco(distanciaEntrada)))
@@ -64,8 +66,8 @@ def getDistanciaSalida():
     for i in range(10):
         puntos.append([i, max(yCerca[i], yLejos[i], yMuyLejos[i])])
 
-    print(f"Centroide: {CalcularCentroide(puntos)}")
-    print(f"Avanzar: {(int(CalcularCentroide(puntos))*MAX_DISTANCIA)/10}")
+    #print(f"Centroide: {CalcularCentroide(puntos)}")
+    print((int(CalcularCentroide(puntos))*MAX_DISTANCIA)/10)
 
 
 def getAngulo(targetX, targetY, myX, myY):
@@ -73,14 +75,14 @@ def getAngulo(targetX, targetY, myX, myY):
     return math.degrees(radianes)
 
 
-def getAnguloSalida():
+def getAnguloSalida(angulo):
     x = []
     yPoco = []
     yMedio = []
     yMucho = []
 
-    anguloDeEntrada = getAnguloDeEntrada(getAngulo(1, 1, 1, 0))
-    print(f"Variable de entrada: {anguloDeEntrada}")
+    anguloDeEntrada = getAnguloDeEntrada(angulo)
+    #print(f"Variable de entrada: {anguloDeEntrada}")
     for i in range(10):
         x.append(i)
         yPoco.append(min(poco(i), poco(anguloDeEntrada)))
@@ -91,11 +93,31 @@ def getAnguloSalida():
     for i in range(10):
         puntos.append([i, max(yPoco[i], yMedio[i], yMucho[i])])
 
-    print(f"Centroide: {CalcularCentroide(puntos)}")
-    print(f"Girar: {(int(CalcularCentroide(puntos))* MAX_ANGULO)/10}")
+    #print(f"Centroide: {CalcularCentroide(puntos)}")
+    print((int(CalcularCentroide(puntos)) * MAX_ANGULO)/10)
 
 
-getDistanciaSalida()
-getAnguloSalida()
+def getAnguloPatada():
+    randomNormal = random.normal()
+    return (randomNormal*MAX_ANGULO_PATADA)/5
+
+
 #fig = go.Figure(data=go.Scatter(x=x, y=yMuyLejos))
 # fig.write_html("./file.html")
+try:
+    jugadorX, jugadorY, pelotaX, pelotaY = int(sys.argv[1]), int(
+        sys.argv[2]), int(sys.argv[3]), int(sys.argv[4])
+    distancia = DistanciaPelotaJugador(jugadorX, jugadorY, pelotaX, pelotaY)
+    if(distancia > MAX_DISTANCIA):
+        # Tenemos que avanzar
+        print('avanzar')
+        #targetX, targetY, myX, myY
+        getAnguloSalida(getAngulo(pelotaX, pelotaY, jugadorX, jugadorY))
+        getDistanciaSalida(distancia)
+    else:
+        # Pateamos
+        print("patear")
+        print(getAnguloPatada())
+
+except:
+    print('Error')
