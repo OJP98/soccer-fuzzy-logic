@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .triangle-up {
+            width: 0;
+            height: 0;
+            top: 0;
+            left: 0;
+            border-left: 10px solid transparent;
+            border-right: 106px solid transparent;
+            border-bottom: 12px solid #555;
+            position: relative;
+        }
+    </style>
+    
+</head>
+
+<body>
+<script>
+    function accion() {
+        console.log("ENTRA")
+
+        velocidad=10
+        triangulo = document.getElementById("triangle")
+        x= triangulo.style.left
+        y= triangulo.style.top
+        moveAngle =15
+
+
+        x=parseFloat(x.substring(0, x.length - 2))
+        y=parseFloat(y.substring(0, y.length - 2))
+
+        if(isNaN(x))
+        {
+            x=0
+            y=0
+        }
+        angle= moveAngle * Math.PI / 180;
+        triangulo.style.transform=`rotate(${moveAngle}deg)`
+        x += velocidad * Math.cos(angle);
+        y += velocidad * Math.sin(angle);
+        triangulo.style.top = `${y}px`;
+        triangulo.style.left = `${x}px`;
+
+    }
+
+</script>
+    <div onclick="accion()" id="triangle" class="triangle-up"></div>
+
+</body>
+
+</html>
