@@ -9,6 +9,7 @@ export default class App extends React.Component {
     super(props)
     this.state = {
       python: '',
+      startSim: false,
     }
 
     this.testPython = this.testPython.bind(this)
@@ -25,14 +26,16 @@ export default class App extends React.Component {
           python: res.join(','),
         })
       })
+
+    this.setState({startSim: true})
   }
 
   render() {
-    const { python } = this.state
+    const { python, startSim } = this.state
     return (
       <div className="title">
         <h1>Soccer with Fuzzy Logic</h1>
-        <Field />
+        <Field startSim={startSim} />
         <Button color="primary" onClick={this.testPython}>Consultar</Button>
         <p>{python}</p>
       </div>

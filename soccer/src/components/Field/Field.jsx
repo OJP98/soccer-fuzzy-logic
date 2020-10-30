@@ -14,6 +14,7 @@ class Field extends Component {
     this.state = {
       x: 0,
       y: 0,
+      startSim: props.startSim,
     }
   }
 
