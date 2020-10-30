@@ -11,11 +11,10 @@ export default class App extends React.Component {
       python: '',
       startSim: false,
     }
-
-    this.testPython = this.testPython.bind(this)
   }
 
   testPython() {
+    /*
     fetch('http://localhost:3000/', {
       method: 'GET',
     })
@@ -26,8 +25,9 @@ export default class App extends React.Component {
           python: res.join(','),
         })
       })
+    */
 
-    this.setState({startSim: true})
+    this.setState({ startSim: true })
   }
 
   render() {
@@ -36,7 +36,7 @@ export default class App extends React.Component {
       <div className="title">
         <h1>Soccer with Fuzzy Logic</h1>
         <Field startSim={startSim} />
-        <Button color="primary" onClick={this.testPython}>Consultar</Button>
+        <Button color="primary" onClick={() => this.testPython()}>Consultar</Button>
         <p>{python}</p>
       </div>
     )

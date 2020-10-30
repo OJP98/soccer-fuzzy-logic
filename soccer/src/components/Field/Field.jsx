@@ -26,12 +26,18 @@ class Field extends Component {
     })
   }
 
+  // eslint-disable-next-line react/no-deprecated
+  componentWillReceiveProps({ startSim }) {
+    const { state } = this
+    this.setState({ ...state, startSim })
+  }
+
   componentDidUpdate() {
     console.log(this.state)
   }
 
   render() {
-    const { x, y } = this.state
+    const { x, y, startSim } = this.state
 
     const style = {
       display: 'flex',
@@ -45,7 +51,7 @@ class Field extends Component {
 
     return (
       <div id="field" style={style}>
-        <Player x={x} y={y} />
+        {startSim && <Player x={x} y={y} /> }
         <Goal x={x} y={y} />
       </div>
     )
