@@ -9,6 +9,8 @@ const WIDTH = 20
 const BALL_HEIGHT = 15
 const BALL_WIDTH = 15 
 
+const SPEED = 15
+
 class Player extends Component {
   constructor(props) {
     super(props)
@@ -24,10 +26,32 @@ class Player extends Component {
 
   // eslint-disable-next-line react/no-deprecated
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      x: nextProps.x,
-      y: nextProps.y,
-    })
+    console.log(this.state)
+    const newCoords = [ nextProps.x, nextProps.y ]
+    this.setState({ topLeftCorner: newCoords })
+  }
+
+  componentDidMount() {
+    console.log(this.state)
+  }
+
+  movePlayer() {
+    const { state } = this
+
+    const moveAngle = 10
+    const angle = moveAngle * Math.PI / 180
+    const newX = state.playerCoords[0] + (SPEED * Math.cos(angle))
+    const newY = state.playerCoords[1] + (SPEED * Math.sin(angle))
+    let newCoords;
+    
+    if (newX < state.topLeftCorner[0]) {
+      newCoords = [ newX + state.topLeftCorner[0], newY + state.topLeftCorner[1] ]
+    } else {
+      newCoords = [ newX, newY ]
+    }
+
+    this.setState({ playerCoords: newCoords })
+    console.log(this.state)
   }
 
   getCoords() {
@@ -44,8 +68,8 @@ class Player extends Component {
     const { state } = this
     const style = {
       position: 'absolute',
-      top: `${state.y}px`,
-      left: `${state.x}px`,
+      top: `${state.playerCoords[1]}px`,
+      left: `${state.playerCoords[0]}px`,
       backgroundImage: state.playerImg,
       backgroundSize: 'cover',
       width: WIDTH,
@@ -64,7 +88,7 @@ class Player extends Component {
 
     return (
       <div>
-	<div style={style} onClick={() => this.getCoords()} aria-hidden="true" />
+	<div style={style} onClick={() => this.movePlayer()} aria-hidden="true" />
 	<div style={ballStyle} />	
       </div>
     )
