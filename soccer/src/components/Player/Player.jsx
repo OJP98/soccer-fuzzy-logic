@@ -4,6 +4,9 @@ import React, { Component } from 'react'
 const playerImg = require('../../assets/player.png').default
 const ballImg = require('../../assets/ball.png').default
 
+const FIELD_HEIGHT = 583
+const FIELD_WIDTH = 1002
+
 const HEIGHT = 20
 const WIDTH = 20
 
@@ -19,9 +22,11 @@ class Player extends Component {
     this.state = {
       topLeftCorner: [props.x, props.y],
       playerCoords: [0, 0],
+      playerAngle: 0,
       ballCoords: [0, 0],
       playerImg: `url(${playerImg})`,
       ballImg: `url(${ballImg})`,
+      pythonResults: '',
     }
   }
 
@@ -40,6 +45,19 @@ class Player extends Component {
     return Math.floor(Math.random() * (a - b + 1) + b)
   }
 
+  getFetchUrl(px, py, bx, by) {
+    const target = new URL('http://localhost:3000/')
+    const params = new URLSearchParams()
+
+    params.set('jugadorX', px)
+    params.set('jugadorY', py)
+    params.set('pelotaX', bx)
+    params.set('pelotaY', by)
+    target.search = params.toString()
+
+    return target
+  }
+
   getCoords() {
     console.log(this.state)
     this.setState(
@@ -53,6 +71,24 @@ class Player extends Component {
   movePlayer() {
     const { state } = this
 
+    const url = this.getFetchUrl(
+      state.playerCoords[0],
+      state.playerCoords[1],
+      state.ballCoords[0],
+      state.ballCoords[1],
+    )
+
+    fetch(url, {
+      method: 'GET',
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res)
+        this.setState({
+          pythonResults: res.join(','),
+        })
+      })
+
     const moveAngle = 10
     const angle = (moveAngle * Math.PI) / 180
     const newX = state.playerCoords[0] + (SPEED * Math.cos(angle))
@@ -65,7 +101,10 @@ class Player extends Component {
       newCoords = [newX, newY]
     }
 
-    this.setState({ playerCoords: newCoords })
+    this.setState({
+      playerCoords: newCoords,
+      playerAngle: moveAngle,
+    })
     console.log(this.state)
   }
 
@@ -73,14 +112,26 @@ class Player extends Component {
     const { state } = this
 
     if (state.playerCoords[0] === 0) {
-      state.playerCoords = [this.getRandom(state.topLeftCorner[0], 200),
-        this.getRandom(state.topLeftCorner[1], 200)]
+      const initialX = state.topLeftCorner[0]
+      const initialY = state.topLeftCorner[1]
+
+      this.setState({
+        playerCoords: [
+          this.getRandom(initialX, initialX + FIELD_WIDTH),
+          this.getRandom(initialY, initialY + FIELD_HEIGHT),
+        ],
+        ballCoords: [
+          this.getRandom(initialX, initialX + FIELD_WIDTH),
+          this.getRandom(initialY, initialY + FIELD_HEIGHT),
+        ],
+      })
     }
 
-    const style = {
+    const playerStyle = {
       position: 'absolute',
       top: `${state.playerCoords[1]}px`,
       left: `${state.playerCoords[0]}px`,
+      transform: `rotate(${state.playerAngle}deg)`,
       backgroundImage: state.playerImg,
       backgroundSize: 'cover',
       width: WIDTH,
@@ -89,8 +140,8 @@ class Player extends Component {
 
     const ballStyle = {
       position: 'absolute',
-      top: `${state.y + 100}px`,
-      left: `${state.x + 100}px`,
+      top: `${state.ballCoords[1]}px`,
+      left: `${state.ballCoords[0]}px`,
       backgroundImage: state.ballImg,
       backgroundSize: 'cover',
       width: BALL_WIDTH,
@@ -99,7 +150,7 @@ class Player extends Component {
 
     return (
       <div>
-        <div style={style} onClick={() => this.movePlayer()} aria-hidden="true" />
+        <div style={playerStyle} onClick={() => this.movePlayer()} aria-hidden="true" />
         <div style={ballStyle} />
       </div>
     )

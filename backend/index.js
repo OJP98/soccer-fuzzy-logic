@@ -12,11 +12,14 @@ app.use(cors())
 
 app.get('/', (req, res) => {
 
+  const params = req.query
+
   // Options when executing python
   let options = {
     mode: 'text',
     scriptPath: path.join(path.resolve(), '../'),
-    pythonOptions: ['-u']
+    pythonOptions: ['-u'],
+    args: [params.jugadorX, params.jugadorY, params.pelotaX, params.pelotaY]
   }
 
   // This is just to print whatever python prints
