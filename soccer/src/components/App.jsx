@@ -13,20 +13,7 @@ export default class App extends React.Component {
     }
   }
 
-  testPython() {
-    /*
-    fetch('http://localhost:3000/', {
-      method: 'GET',
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res)
-        this.setState({
-          python: res.join(','),
-        })
-      })
-    */
-
+  startSimulation() {
     this.setState({ startSim: true })
   }
 
@@ -36,7 +23,7 @@ export default class App extends React.Component {
       <div className="title">
         <h1>Soccer with Fuzzy Logic</h1>
         <Field startSim={startSim} />
-        <Button color="primary" onClick={() => this.testPython()}>Consultar</Button>
+        <Button color="primary" onClick={() => this.startSimulation()}>Start Simulation</Button>
         <p>{python}</p>
       </div>
     )

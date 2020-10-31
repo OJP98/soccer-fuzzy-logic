@@ -58,14 +58,29 @@ class Player extends Component {
     return target
   }
 
-  getCoords() {
-    console.log(this.state)
-    this.setState(
-      (prevState) => ({
-        x: parseInt(prevState.x, 10) + 10,
-        y: parseInt(prevState.y, 10) + 10,
-      }),
-    )
+  handlePythonResponse(res) {
+    console.log('python response:', res)
+    const { state } = this
+
+    if (res[0] === 'avanzar') {
+      this.setState({ playerAngle: res[1] })
+
+      const dist = res[2]
+      const angle = (state.playerAngle * Math.PI) / 180
+      const newX = state.playerCoords[0] + (dist * Math.cos(angle))
+      const newY = state.playerCoords[1] + (dist * Math.sin(angle))
+      let newCoords
+      if (newX < state.topLeftCorner[0]) {
+        newCoords = [newX + state.topLeftCorner[0], newY + state.topLeftCorner[1]]
+      } else {
+        newCoords = [newX, newY]
+      }
+      this.setState({
+        playerCoords: newCoords,
+      })
+    } else {
+      // manejar el ángulo de patada
+    }
   }
 
   movePlayer() {
@@ -78,39 +93,23 @@ class Player extends Component {
       state.ballCoords[1],
     )
 
+    console.log('se consulta el siguiente URL', url)
+
     fetch(url, {
       method: 'GET',
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
-        this.setState({
-          pythonResults: res.join(','),
-        })
+        this.handlePythonResponse(res)
+
+        console.log(state)
       })
-
-    const moveAngle = 10
-    const angle = (moveAngle * Math.PI) / 180
-    const newX = state.playerCoords[0] + (SPEED * Math.cos(angle))
-    const newY = state.playerCoords[1] + (SPEED * Math.sin(angle))
-    let newCoords
-
-    if (newX < state.topLeftCorner[0]) {
-      newCoords = [newX + state.topLeftCorner[0], newY + state.topLeftCorner[1]]
-    } else {
-      newCoords = [newX, newY]
-    }
-
-    this.setState({
-      playerCoords: newCoords,
-      playerAngle: moveAngle,
-    })
-    console.log(this.state)
   }
 
   render() {
     const { state } = this
 
+    // Check if it's the first time rendering
     if (state.playerCoords[0] === 0) {
       const initialX = state.topLeftCorner[0]
       const initialY = state.topLeftCorner[1]
