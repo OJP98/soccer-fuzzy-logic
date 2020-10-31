@@ -3,8 +3,8 @@ from numpy import random
 import math
 import sys
 
-MAX_DISTANCIA = 256
-MAX_ANGULO = 365
+MAX_DISTANCIA = 1230
+MAX_ANGULO = 180
 MAX_ANGULO_PATADA = 15
 RANGO_PATADA = 10
 
@@ -80,8 +80,12 @@ def getAnguloSalida(angulo):
     yPoco = []
     yMedio = []
     yMucho = []
-
+    negativo = False
     anguloDeEntrada = getAnguloDeEntrada(angulo)
+    #print(f"Angulo real {angulo}")
+    if(anguloDeEntrada < 0):
+        negativo = True
+        anguloDeEntrada *= -1
     #print(f"Variable de entrada: {anguloDeEntrada}")
     for i in range(10):
         x.append(i)
@@ -94,7 +98,10 @@ def getAnguloSalida(angulo):
         puntos.append([i, max(yPoco[i], yMedio[i], yMucho[i])])
 
     #print(f"Centroide: {CalcularCentroide(puntos)}")
-    print((int(CalcularCentroide(puntos)) * MAX_ANGULO)/10)
+    if(negativo):
+        print(-1*((int(CalcularCentroide(puntos)) * MAX_ANGULO)/10))
+    else:
+        print((int(CalcularCentroide(puntos)) * MAX_ANGULO)/10)
 
 
 def getAnguloPatada():
@@ -108,7 +115,7 @@ try:
     jugadorX, jugadorY, pelotaX, pelotaY = int(sys.argv[1]), int(
         sys.argv[2]), int(sys.argv[3]), int(sys.argv[4])
     distancia = DistanciaPelotaJugador(jugadorX, jugadorY, pelotaX, pelotaY)
-    if(distancia > MAX_DISTANCIA):
+    if(distancia > RANGO_PATADA):
         # Tenemos que avanzar
         print('avanzar')
         #targetX, targetY, myX, myY
@@ -117,6 +124,7 @@ try:
     else:
         # Pateamos
         print("patear")
+        print(f"Distancia {distancia}")
         print(getAnguloPatada())
 
 except:
