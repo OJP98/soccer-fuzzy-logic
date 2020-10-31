@@ -124,7 +124,7 @@ try:
     else:
         # Pateamos
         print("patear")
-        print(f"Distancia {distancia}")
+        #print(f"Distancia {distancia}")
         print(getAnguloPatada())
 
 except:
