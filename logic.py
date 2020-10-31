@@ -127,5 +127,5 @@ try:
         #print(f"Distancia {distancia}")
         print(getAnguloPatada())
 
-except:
-    print('Error')
+except Exception as e:
+    print(f'Error: {e}')
