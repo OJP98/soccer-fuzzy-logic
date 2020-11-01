@@ -126,11 +126,12 @@ class Player extends Component {
       let traveled = 0
 
       const newInterval = setInterval(() => {
+        const { playerCoords, topLeftCorner } = this.state
         traveled += this.playerInterval()
         if (traveled >= dist
-          || state.playerCoords[1] >= state.topLeftCorner[1] + FIELD_HEIGHT
-          || state.playerCoords[1] <= state.topLeftCorner[1]
-          || state.playerCoords[1] >= state.topLeftCorner[0] + FIELD_WIDTH) {
+          || playerCoords[1] >= topLeftCorner[1] + FIELD_HEIGHT
+          || playerCoords[1] <= topLeftCorner[1]
+          || playerCoords[1] >= topLeftCorner[0] + FIELD_WIDTH) {
           console.log(traveled)
           clearInterval(newInterval)
         }
@@ -145,9 +146,30 @@ class Player extends Component {
       })
       console.log(ballAngle)
 
+      let traveled = 0
+      const fieldEnd = state.topLeftCorner[0] + FIELD_WIDTH + GOAL_WIDTH
+      const goalX = fieldEnd - GOAL_WIDTH
+      const goalTop = (FIELD_HEIGHT / 2 - GOAL_HEIGHT / 2) + state.topLeftCorner[1]
+      const goalBottom = goalTop + GOAL_HEIGHT
+
       const newInterval = setInterval(() => {
-        // TODO: Ball movement and goal validation
-      })
+        const { ballCoords } = this.state
+        traveled += this.ballInterval(ballAngle)
+
+        // Check if the ball is in the goal X position
+        if (ballCoords[0] >= (goalX + GOAL_WIDTH / 2)) {
+          // Check if the boal went in
+          if (ballCoords[1] >= goalTop && ballCoords[1] <= goalBottom) {
+            console.log('GOAAAL')
+          // Else, it's a miss
+          } else {
+            console.log('MISSED')
+          }
+
+          clearInterval(newInterval)
+          console.log(traveled)
+        }
+      }, 10)
     }
   }
 
