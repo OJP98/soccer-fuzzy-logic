@@ -6,7 +6,7 @@ import sys
 MAX_DISTANCIA = 1230
 MAX_ANGULO = 180
 MAX_ANGULO_PATADA = 15
-RANGO_PATADA = 10
+RANGO_PATADA = 70
 
 
 def DistanciaPelotaJugador(jugadorX, jugadorY, pelotaX, pelotaY):

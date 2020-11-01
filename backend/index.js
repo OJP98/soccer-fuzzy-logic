@@ -19,7 +19,12 @@ app.get('/', (req, res) => {
     mode: 'text',
     scriptPath: path.join(path.resolve(), '../'),
     pythonOptions: ['-u'],
-    args: [params.jugadorX, params.jugadorY, params.pelotaX, params.pelotaY]
+    args: [
+      parseInt(params.jugadorX, 10),
+      parseInt(params.jugadorY, 10),
+      parseInt(params.pelotaX, 10),
+      parseInt(params.pelotaY, 10)
+    ]
   }
 
   // This is just to print whatever python prints
