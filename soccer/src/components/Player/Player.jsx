@@ -13,7 +13,10 @@ const WIDTH = 20
 const BALL_HEIGHT = 15
 const BALL_WIDTH = 15
 
-const SPEED = 15
+const GOAL_HEIGHT = 200
+const GOAL_WIDTH = 50
+
+const SPEED = 2
 
 class Player extends Component {
   constructor(props) {
@@ -58,28 +61,93 @@ class Player extends Component {
     return target
   }
 
+  ballInterval(ballAngle) {
+    const { state } = this
+
+    const angle = ballAngle / 180
+
+    // Previous player coordinates
+    const prevX = state.ballCoords[0]
+    const prevY = state.ballCoords[1]
+
+    // New player coordinates
+    const newX = prevX + (SPEED * Math.cos(angle))
+    const newY = prevY + (SPEED * Math.sin(angle))
+
+    this.setState({
+      ballCoords: [newX, newY],
+    })
+
+    const difX = Math.abs(newX - prevX)
+    const difY = Math.abs(newY - prevY)
+
+    return Math.sqrt((difX ** 2) + (difY ** 2))
+  }
+
+  playerInterval() {
+    const { state } = this
+
+    const angle = (state.playerAngle * Math.PI) / 180
+
+    // Previous player coordinates
+    const prevX = state.playerCoords[0]
+    const prevY = state.playerCoords[1]
+
+    // New player coordinates
+    const newX = prevX + (SPEED * Math.cos(angle))
+    const newY = prevY + (SPEED * Math.sin(angle))
+
+    let newCoords
+    if (newX < state.topLeftCorner[0]) {
+      newCoords = [newX + state.topLeftCorner[0], newY + state.topLeftCorner[1]]
+    } else {
+      newCoords = [newX, newY]
+    }
+
+    this.setState({
+      playerCoords: newCoords,
+    })
+
+    const difX = Math.abs(newX - prevX)
+    const difY = Math.abs(newY - prevY)
+
+    return Math.sqrt((difX ** 2) + (difY ** 2))
+  }
+
   handlePythonResponse(res) {
     console.log('python response:', res)
     const { state } = this
 
+    // python sends that the player need to move
     if (res[0] === 'avanzar') {
       this.setState({ playerAngle: res[1] })
 
       const dist = res[2]
-      const angle = (state.playerAngle * Math.PI) / 180
-      const newX = state.playerCoords[0] + (dist * Math.cos(angle))
-      const newY = state.playerCoords[1] + (dist * Math.sin(angle))
-      let newCoords
-      if (newX < state.topLeftCorner[0]) {
-        newCoords = [newX + state.topLeftCorner[0], newY + state.topLeftCorner[1]]
-      } else {
-        newCoords = [newX, newY]
-      }
-      this.setState({
-        playerCoords: newCoords,
-      })
+      let traveled = 0
+
+      const newInterval = setInterval(() => {
+        traveled += this.playerInterval()
+        if (traveled >= dist
+          || state.playerCoords[1] >= state.topLeftCorner[1] + FIELD_HEIGHT
+          || state.playerCoords[1] <= state.topLeftCorner[1]
+          || state.playerCoords[1] >= state.topLeftCorner[0] + FIELD_WIDTH) {
+          console.log(traveled)
+          clearInterval(newInterval)
+        }
+      }, 10)
+    // python sends that the player must shoot
     } else {
-      // manejar el ángulo de patada
+      const ballAngle = res[1]
+
+      this.setState({
+        playerAngle: 0,
+        ballAngle,
+      })
+      console.log(ballAngle)
+
+      const newInterval = setInterval(() => {
+        // TODO: Ball movement and goal validation
+      })
     }
   }
 
@@ -92,8 +160,6 @@ class Player extends Component {
       state.ballCoords[0],
       state.ballCoords[1],
     )
-
-    console.log('se consulta el siguiente URL', url)
 
     fetch(url, {
       method: 'GET',
