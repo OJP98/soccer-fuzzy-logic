@@ -29,17 +29,18 @@ class Player extends Component {
       ballCoords: [0, 0],
       playerImg: `url(${playerImg})`,
       ballImg: `url(${ballImg})`,
-      pythonResults: '',
+      isPlaying: false,
+      roundOver: false,
+      scored: false,
     }
   }
 
   componentDidMount() {
-    console.log(this.state)
+    this.movePlayer()
   }
 
   // eslint-disable-next-line react/no-deprecated
   componentWillReceiveProps(nextProps) {
-    console.log(this.state)
     const newCoords = [nextProps.x, nextProps.y]
     this.setState({ topLeftCorner: newCoords })
   }
@@ -132,8 +133,9 @@ class Player extends Component {
           || playerCoords[1] >= topLeftCorner[1] + FIELD_HEIGHT
           || playerCoords[1] <= topLeftCorner[1]
           || playerCoords[1] >= topLeftCorner[0] + FIELD_WIDTH) {
-          console.log(traveled)
           clearInterval(newInterval)
+
+          this.setState({ isPlaying: false })
         }
       }, 10)
     // python sends that the player must shoot
@@ -142,11 +144,8 @@ class Player extends Component {
 
       this.setState({
         playerAngle: 0,
-        ballAngle,
       })
-      console.log(ballAngle)
 
-      let traveled = 0
       const fieldEnd = state.topLeftCorner[0] + FIELD_WIDTH + GOAL_WIDTH
       const goalX = fieldEnd - GOAL_WIDTH
       const goalTop = (FIELD_HEIGHT / 2 - GOAL_HEIGHT / 2) + state.topLeftCorner[1]
@@ -154,44 +153,65 @@ class Player extends Component {
 
       const newInterval = setInterval(() => {
         const { ballCoords } = this.state
-        traveled += this.ballInterval(ballAngle)
+        this.ballInterval(ballAngle)
 
         // Check if the ball is in the goal X position
         if (ballCoords[0] >= (goalX + GOAL_WIDTH / 2)) {
           // Check if the boal went in
           if (ballCoords[1] >= goalTop && ballCoords[1] <= goalBottom) {
-            console.log('GOAAAL')
-          // Else, it's a miss
-          } else {
-            console.log('MISSED')
+            this.setState({ scored: true })
           }
 
+          this.setState({
+            roundOver: true,
+          })
           clearInterval(newInterval)
-          console.log(traveled)
         }
-      }, 10)
+      }, 6)
     }
   }
 
   movePlayer() {
-    const { state } = this
+    const newInterval = setInterval(() => {
+      const {
+        isPlaying,
+        playerCoords,
+        ballCoords,
+        roundOver,
+        scored,
+      } = this.state
 
-    const url = this.getFetchUrl(
-      state.playerCoords[0],
-      state.playerCoords[1],
-      state.ballCoords[0],
-      state.ballCoords[1],
-    )
+      const url = this.getFetchUrl(
+        playerCoords[0],
+        playerCoords[1],
+        ballCoords[0],
+        ballCoords[1],
+      )
 
-    fetch(url, {
-      method: 'GET',
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        this.handlePythonResponse(res)
+      if (roundOver) {
 
-        console.log(state)
-      })
+        if (scored) {
+          console.log('GOAAAL')
+          // TODO: Send the parent the game is over and the player scored
+        } else {
+          console.log('MISSED')
+        }
+
+        clearInterval(newInterval)
+      }
+
+      if (!isPlaying) {
+        this.setState({ isPlaying: true })
+
+        fetch(url, {
+          method: 'GET',
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            this.handlePythonResponse(res)
+          })
+      }
+    }, 500)
   }
 
   render() {
