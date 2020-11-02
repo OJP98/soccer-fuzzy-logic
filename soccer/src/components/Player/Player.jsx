@@ -35,6 +35,17 @@ class Player extends Component {
     }
   }
 
+  getInitialState() {
+    this.setState({
+      playerCoords: [0, 0],
+      playerAngle: 0,
+      ballCoords: [0, 0],
+      isPlaying: false,
+      roundOver: false,
+      scored: false,
+    })
+  }
+
   componentDidMount() {
     this.movePlayer()
   }
@@ -189,12 +200,11 @@ class Player extends Component {
       )
 
       if (roundOver) {
-
+        const { goalCallback } = this.props
         if (scored) {
-          console.log('GOAAAL')
-          // TODO: Send the parent the game is over and the player scored
+          goalCallback(true)
         } else {
-          console.log('MISSED')
+          goalCallback(false)
         }
 
         clearInterval(newInterval)

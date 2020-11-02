@@ -36,6 +36,10 @@ class Field extends Component {
     // console.log(this.state)
   }
 
+  handlePlayerCallback = (goalData) => {
+    this.props.handleCallback(goalData)
+  }
+
   render() {
     const { x, y, startSim } = this.state
 
@@ -51,7 +55,7 @@ class Field extends Component {
 
     return (
       <div id="field" style={style}>
-        {startSim && <Player x={x} y={y} /> }
+        {startSim && <Player x={x} y={y} goalCallback={this.handlePlayerCallback} /> }
         <Goal x={x} y={y} />
       </div>
     )
