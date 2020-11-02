@@ -140,10 +140,7 @@ class Player extends Component {
       const newInterval = setInterval(() => {
         const { playerCoords, topLeftCorner } = this.state
         traveled += this.playerInterval()
-        if (traveled >= dist
-          || playerCoords[1] >= topLeftCorner[1] + FIELD_HEIGHT
-          || playerCoords[1] <= topLeftCorner[1]
-          || playerCoords[1] >= topLeftCorner[0] + FIELD_WIDTH) {
+        if (traveled >= dist) {
           clearInterval(newInterval)
 
           this.setState({ isPlaying: false })
@@ -152,19 +149,27 @@ class Player extends Component {
     // python sends that the player must shoot
     } else {
       const ballAngle = res[1]
-
-      this.setState({
-        playerAngle: 0,
-      })
+      const { playerCoords } = this.state
 
       const fieldEnd = state.topLeftCorner[0] + FIELD_WIDTH + GOAL_WIDTH
       const goalX = fieldEnd - GOAL_WIDTH
       const goalTop = (FIELD_HEIGHT / 2 - GOAL_HEIGHT / 2) + state.topLeftCorner[1]
       const goalBottom = goalTop + GOAL_HEIGHT
 
+      const y = playerCoords[1] - (goalTop + GOAL_HEIGHT/2)
+      const x = goalX - playerCoords[0] - 100
+      let playerLookAt = -1 * (Math.atan2(y, x) * 180) / Math.PI
+
+      // Add up the random angle provided by python
+      playerLookAt += parseInt(ballAngle)
+
+      this.setState({
+        playerAngle: playerLookAt,
+      })
+
       const newInterval = setInterval(() => {
         const { ballCoords } = this.state
-        this.ballInterval(ballAngle)
+        this.ballInterval(playerLookAt)
 
         // Check if the ball is in the goal X position
         if (ballCoords[0] >= (goalX + GOAL_WIDTH / 2)) {
@@ -241,6 +246,7 @@ class Player extends Component {
           this.getRandom(initialX, initialX + FIELD_WIDTH - 20),
           this.getRandom(initialY, initialY + FIELD_HEIGHT - 20),
         ],
+	playerAngle: this.getRandom(0, 360)
       })
     }
 
