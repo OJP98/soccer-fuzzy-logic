@@ -9,14 +9,14 @@ Simple soccer AI simulation using the fuzzy logic algorithm. The app is made wit
 
 ## Installation guide
 
-1. Clone this repository with the following url: [https://github.com/OJP98/soccer-fuzzy-logic].
+1. Clone this repository with the following url: https://github.com/OJP98/soccer-fuzzy-logic.
 2. With your favorite terminal, access the folder containing the source code and install the python dependencies with the following command:
 `pip install -r requirements.txt`.
 3. While still in your terminal, access the *backend* folder and run `npm install`. 
 4. Once step 3 is done, run `npm start`. This will run an ExpressJS server that will act as our middleware so that we can use python as backend for the algorithm. It will run in localhost, port 3000.
 5. Go back to the root folder of the repository.
 6. Access the *soccer* folder and run `npm install` once more.
-7. Once step 6 is done, run `npm start`. This will start a react-webpack environment in [http://localhost:9000].
+7. Once step 6 is done, run `npm start`. This will start a react-webpack environment in http://localhost:9000.
 8. Open your browser on the URL specified and run the simulation.
 
 ## Directory guide
