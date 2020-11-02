@@ -229,17 +229,17 @@ class Player extends Component {
 
     // Check if it's the first time rendering
     if (state.playerCoords[0] === 0) {
-      const initialX = state.topLeftCorner[0]
-      const initialY = state.topLeftCorner[1]
+      const initialX = state.topLeftCorner[0] + 20
+      const initialY = state.topLeftCorner[1] + 20
 
       this.setState({
         playerCoords: [
-          this.getRandom(initialX, initialX + FIELD_WIDTH),
-          this.getRandom(initialY, initialY + FIELD_HEIGHT),
+          this.getRandom(initialX, initialX + FIELD_WIDTH - 20),
+          this.getRandom(initialY, initialY + FIELD_HEIGHT - 20),
         ],
         ballCoords: [
-          this.getRandom(initialX, initialX + FIELD_WIDTH),
-          this.getRandom(initialY, initialY + FIELD_HEIGHT),
+          this.getRandom(initialX, initialX + FIELD_WIDTH - 20),
+          this.getRandom(initialY, initialY + FIELD_HEIGHT - 20),
         ],
       })
     }

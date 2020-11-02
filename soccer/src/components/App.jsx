@@ -12,11 +12,15 @@ export default class App extends React.Component {
       startSim: false,
       goals: 0,
       misses: 0,
+      buttonText: 'Run Simulation'
     }
   }
 
   startSimulation() {
-    this.setState({ startSim: true })
+    this.setState({
+      startSim: true,
+      buttonText: 'Simulation Running...',
+    })
   }
 
   handleCallback = (goaldata) => {
@@ -28,7 +32,17 @@ export default class App extends React.Component {
       this.setState({ misses: misses + 1 })
     }
 
-    this.setState({ startSim: false })
+    this.setState({
+      startSim: false,
+      buttonText: 'Run Simulation',
+    })
+  }
+
+  stopSimulation() {
+    this.setState({
+      startSim: false,
+      buttonText: 'Run Simulation',
+    })
   }
 
   render() {
@@ -37,14 +51,16 @@ export default class App extends React.Component {
       startSim,
       goals,
       misses,
+      buttonText,
     } = this.state
 
     return (
       <div className="title">
         <h1>Soccer with Fuzzy Logic</h1>
+	<p className="no-margin">To start a simulation, press on the RUN SIMULATION button below the soccer field. Once the player shoots the ball, the scoreboard will update and both assets will disappear. Press on the button again to run another simulation.</p>
         <Field startSim={startSim} handleCallback={this.handleCallback}/>
         <div className="text-div">
-          <Button color="primary" onClick={() => this.startSimulation()}>Start Simulation</Button>
+          <Button color="primary" onClick={() => this.startSimulation()}>{ buttonText }</Button>
           <p>
             Goals:
             { goals }

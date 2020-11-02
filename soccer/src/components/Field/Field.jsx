@@ -6,6 +6,7 @@ import Goal from '../Goal/Goal.jsx'
 
 const HEIGHT = 603
 const WIDTH = 1072
+
 const fieldImg = require('../../assets/field.png').default
 
 class Field extends Component {
@@ -30,10 +31,6 @@ class Field extends Component {
   componentWillReceiveProps({ startSim }) {
     const { state } = this
     this.setState({ ...state, startSim })
-  }
-
-  componentDidUpdate() {
-    // console.log(this.state)
   }
 
   handlePlayerCallback = (goalData) => {
