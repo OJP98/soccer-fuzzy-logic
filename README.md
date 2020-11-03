@@ -25,6 +25,11 @@ Simple soccer AI simulation using the fuzzy logic algorithm. The app is made wit
 * *backend* contains an ExpressJS server that uses python-shell library in order to execute and provide python results.
 * *logic.py* file that processes all the player and ball coordinates and returns what the player must do in order to score a goal.
 
+## Video Demonstration
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=iyIBZGY_0Pc
+" target="_blank"><img src="http://img.youtube.com/vi/iyIBZGY_0Pc/0.jpg" 
+alt="Youtube video thumbnail" width="240" height="180" border="10" /></a>
+
 ## Developers:
 
 * Jose Pablo Cifuentes
